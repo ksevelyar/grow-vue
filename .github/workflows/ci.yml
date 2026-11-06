@@ -1,0 +1,19 @@
+name: CI
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v31
+      with:
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+    - name: Install deps
+      run: nix develop --command npm ci
+    - name: Run lint and format checks
+      run: nix develop --command npm run lint
+    - name: Run tests
+      run: nix develop --command npm run test
+    - name: Build with Nix
+      run: nix build

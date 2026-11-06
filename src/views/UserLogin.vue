@@ -1,0 +1,65 @@
+<template lang="pug">
+form.user-login(@submit.prevent='loginUser')
+  input.user-login__email(
+    v-model.trim='userForm.email'
+    placeholder="email"
+    type="email"
+    required
+  )
+
+  input.user-login__password(
+    v-model.trim='userForm.password'
+    placeholder="password"
+    type="password"
+    required
+  )
+
+  button.user-login__submit(type="submit") Authenticate
+</template>
+
+<script setup>
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+
+const user = useUserStore()
+const router = useRouter()
+
+const userForm = reactive({
+  email: '',
+  password: '',
+})
+
+const loginUser = async () => {
+  try {
+    await user.login(userForm)
+    await router.push({ path: '/' })
+  } catch (error) {
+    console.error(error)
+  }
+}
+</script>
+
+<style>
+.user-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-login__email {
+  box-sizing: border-box;
+  width: 200px;
+}
+
+.user-login__password {
+  box-sizing: border-box;
+  width: 200px;
+}
+
+.user-login__submit {
+  width: 200px;
+}
+</style>
