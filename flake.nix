@@ -13,8 +13,11 @@
       devShell = pkgs.mkShell {
         buildInputs = [
           pkgs.nodejs_24
+          pkgs.vue-language-server
+          pkgs.vtsls
         ];
         VITE_BACK = "http://grow.localhost:3000";
+        VUE_LANGUAGE_SERVER_PATH = "${pkgs.vue-language-server}/lib/language-tools/packages/language-server";
       };
 
       packages.default = pkgs.buildNpmPackage {
@@ -26,7 +29,7 @@
 
         src = self;
 
-        npmDepsHash = "sha256-eHpQ5OUHnXNJQY4nBAT6brpqQQIg/6DwNl9AxBE4b4Q=";
+        npmDepsHash = "sha256-GAdnWtvFHB8mo1aFijweJU/BfutJkW6P6VE0L/YHq7M=";
 
         VITE_BACK = "https://api.grow.rusty-cluster.net";
         npmBuild = "npm run build";
