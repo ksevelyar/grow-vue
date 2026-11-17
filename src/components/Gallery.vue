@@ -26,8 +26,7 @@ section.gallery
       @click="navigateToPreviousPhoto"
     )
       | ‹
-    p.gallery__loading(v-if="isLoading") Loading photo…
-    p.gallery__error(v-else-if="viewerError") {{ viewerError }}
+    p.gallery__error(v-if="viewerError") {{ viewerError }}
     img.gallery__full-image(
       v-if="activePhotoUrl"
       :src="activePhotoUrl"
@@ -55,7 +54,6 @@ const props = defineProps({
 
 const activePhotoIndex = ref(null)
 const activePhotoUrl = ref('')
-const isLoading = ref(false)
 const viewerError = ref('')
 const photoRequestIdentifier = ref(0)
 
@@ -78,7 +76,6 @@ async function loadPhoto(photoIndex) {
   photoRequestIdentifier.value = currentPhotoRequestIdentifier
   revokeActivePhotoUrl()
   activePhotoIndex.value = photoIndex
-  isLoading.value = true
   viewerError.value = ''
 
   try {
@@ -92,10 +89,6 @@ async function loadPhoto(photoIndex) {
   } catch (loadError) {
     if (currentPhotoRequestIdentifier === photoRequestIdentifier.value) {
       viewerError.value = loadError.message
-    }
-  } finally {
-    if (currentPhotoRequestIdentifier === photoRequestIdentifier.value) {
-      isLoading.value = false
     }
   }
 }
@@ -135,7 +128,6 @@ function closeViewer() {
   photoRequestIdentifier.value += 1
   revokeActivePhotoUrl()
   activePhotoIndex.value = null
-  isLoading.value = false
   viewerError.value = ''
   window.removeEventListener('keydown', handleViewerKeydown)
 }
@@ -226,13 +218,9 @@ function revokeActivePhotoUrl() {
   right: 12px;
 }
 
-.gallery__loading,
-.gallery__error {
-  color: #fff;
-}
-
 .gallery__error {
   max-width: 70vw;
+  color: #fff;
 }
 
 @media (max-width: 600px) {

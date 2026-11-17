@@ -16,7 +16,7 @@
           pkgs.vue-language-server
           pkgs.vtsls
         ];
-        VITE_BACK = "http://grow.localhost:3000";
+        VITE_BACK = "http://api.grow.localhost:3020";
         VUE_LANGUAGE_SERVER_PATH = "${pkgs.vue-language-server}/lib/language-tools/packages/language-server";
       };
 

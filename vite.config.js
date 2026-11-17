@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     allowedHosts: ['grow.localhost'],
-    port: 3001,
+    port: 3002,
   },
   resolve: {
     alias: { '@': path.resolve(import.meta.dirname, './src') },
