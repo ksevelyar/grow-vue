@@ -80,14 +80,14 @@ function getCurrentProgress(startedAt) {
 }
 
 .button {
-  background: var(--color-4);
-  color: #fff;
+  background: var(--color-text-muted);
+  color: var(--color-contrast);
   padding: 10px 14px;
 }
 
 .button:hover {
-  background: var(--color-1);
-  color: #fff;
+  background: var(--color-text);
+  color: var(--color-contrast);
 }
 
 .grow-logs__grid {
@@ -105,11 +105,11 @@ function getCurrentProgress(startedAt) {
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  background: #808080;
+  background: var(--color-placeholder);
 }
 
 .grow-logs__thumbnail--empty {
-  background: #b8b8b8;
+  background: var(--color-placeholder);
 }
 
 .grow-logs__thumbnail img {
@@ -122,8 +122,8 @@ function getCurrentProgress(startedAt) {
   position: absolute;
   top: 8px;
   left: 8px;
-  color: #fff;
-  background: rgb(0 0 0 / 65%);
+  color: var(--color-contrast);
+  background: var(--color-overlay);
   padding: 5px;
   font-size: 0.75rem;
 }
@@ -138,25 +138,25 @@ function getCurrentProgress(startedAt) {
   gap: 4px;
   box-sizing: border-box;
   padding: 24px 12px 12px;
-  background: linear-gradient(transparent, rgb(0 0 0 / 80%));
+  background: linear-gradient(transparent, var(--color-overlay));
 }
 
 .grow-logs__log-name {
-  color: #fff;
+  color: var(--color-contrast);
 }
 
 .grow-logs__plant-name {
-  color: rgb(255 255 255 / 85%);
+  color: var(--color-contrast);
   font-size: 0.85rem;
 }
 
 .grow-logs__state,
 .grow-logs__empty {
   padding: 24px;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 
 .grow-logs__state--error {
-  color: #8b1a1a;
+  color: var(--color-error);
 }
 </style>

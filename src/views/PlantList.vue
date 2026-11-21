@@ -1,7 +1,6 @@
 <template lang="pug">
 main.plant-list
-  .plant-list__heading
-    h1.plant-list__title Plants
+  h1.plant-list__title Plants
   p.plant-list__state(v-if="isLoading") Loading plants…
   p.plant-list__state.plant-list__state--error(v-else-if="requestError") {{ requestError }}
   form.plant-list__form(@submit.prevent="savePlant")
@@ -146,13 +145,13 @@ async function deletePlant(plant) {
 
 .plant-list__field input {
   padding: 9px;
-  border: 1px solid var(--color-2);
+  border: 1px solid var(--color-border);
 }
 
 .plant-list__field-error,
 .plant-list__conflict,
 .plant-list__state--error {
-  color: #8b1a1a;
+  color: var(--color-error);
 }
 
 .plant-list__items {
@@ -168,11 +167,11 @@ async function deletePlant(plant) {
   gap: 12px;
   align-items: center;
   padding: 14px;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 
 .plant-list__link {
-  color: var(--color-4);
+  color: var(--color-text-muted);
 }
 
 .plant-list__conflict {
@@ -182,6 +181,6 @@ async function deletePlant(plant) {
 .plant-list__message,
 .plant-list__state {
   padding: 12px;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 </style>

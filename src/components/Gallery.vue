@@ -148,7 +148,7 @@ function revokeActivePhotoUrl() {
   width: 100%;
   padding: 0;
   border: 0;
-  background: #b8b8b8;
+  background: var(--color-placeholder);
   cursor: pointer;
 }
 
@@ -161,7 +161,7 @@ function revokeActivePhotoUrl() {
 
 .gallery__empty {
   padding: 18px;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 
 .gallery__viewer {
@@ -172,7 +172,7 @@ function revokeActivePhotoUrl() {
   align-items: center;
   justify-content: center;
   padding: 0 40px;
-  background: rgb(0 0 0 / 95%);
+  background: var(--color-backdrop);
 }
 
 .gallery__image {
@@ -194,8 +194,8 @@ function revokeActivePhotoUrl() {
   right: 0;
   left: 0;
   padding: 8px 12px;
-  color: #fff;
-  background: rgb(0 0 0 / 70%);
+  color: var(--color-contrast);
+  background: var(--color-overlay);
   text-align: center;
 }
 
@@ -207,8 +207,8 @@ function revokeActivePhotoUrl() {
   height: 48px;
   place-items: center;
   border: 0;
-  color: #fff;
-  background: rgb(0 0 0 / 55%);
+  color: var(--color-contrast);
+  background: var(--color-overlay);
   font-size: 2rem;
   cursor: pointer;
 }
@@ -228,7 +228,7 @@ function revokeActivePhotoUrl() {
 
 .gallery__error {
   max-width: 70vw;
-  color: #fff;
+  color: var(--color-contrast);
 }
 
 @media (max-width: 600px) {

@@ -104,6 +104,6 @@ function setRequestErrors(requestErrorValue) {
 
 .grow-log-new__message {
   padding: 12px;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 </style>

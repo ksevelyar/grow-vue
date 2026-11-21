@@ -40,20 +40,20 @@ div.grow-log
             option(value="" disabled) Select a stage
             option(v-for="stage in stages" :key="stage" :value="stage") {{ stage }}
           span.grow-log__field-error(v-if="fieldErrors.stage") {{ fieldErrors.stage }}
-        label.grow-log__field.grow-log__field--wide
+        label.grow-log__field.grow-log__wide
           span Description
           textarea(v-model="entryForm.description")
-        label.grow-log__field.grow-log__field--wide
+        label.grow-log__field.grow-log__wide
           span Photos
           input(ref="photoFileInput" type="file" accept="image/*" multiple @change="selectPhotos")
-        .grow-log__photos.grow-log__field--wide(v-if="selectedReportEntry && selectedReportEntry.photos.length")
+        .grow-log__photos.grow-log__wide(v-if="selectedReportEntry && selectedReportEntry.photos.length")
           figure.grow-log__photo(v-for="photo in selectedReportEntry.photos" :key="photo.id")
             img(:src="getBackendUrl(photo.thumbnail_url)")
             button(type="button" @click="deletePhoto(photo)") Remove photo
-        p.grow-log__photo-errors.grow-log__field--wide(v-if="photoUploadErrors.length")
+        p.grow-log__photo-errors.grow-log__wide(v-if="photoUploadErrors.length")
           span(v-for="uploadError in photoUploadErrors" :key="uploadError") {{ uploadError }}
-        p.grow-log__error.grow-log__field--wide(v-if="requestError") {{ requestError }}
-        .grow-log__form-actions.grow-log__field--wide
+        p.grow-log__error.grow-log__wide(v-if="requestError") {{ requestError }}
+        .grow-log__form-actions.grow-log__wide
           button(type="submit" :disabled="isSavingEntry") {{ reportActionLabel }}
     div.grow-log__entries
       h2.grow-log__section-title Log entries
@@ -368,7 +368,7 @@ function setRequestErrors(requestErrorValue, fallbackMessage) {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   padding: 18px;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 
 .grow-log__summary-field {
@@ -378,7 +378,7 @@ function setRequestErrors(requestErrorValue, fallbackMessage) {
 }
 
 .grow-log__summary-label {
-  color: var(--color-4);
+  color: var(--color-text-muted);
 }
 
 .grow-log__summary-value,
@@ -400,7 +400,7 @@ function setRequestErrors(requestErrorValue, fallbackMessage) {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   padding: 18px;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 
 .grow-log__field {
@@ -409,7 +409,7 @@ function setRequestErrors(requestErrorValue, fallbackMessage) {
   gap: 6px;
 }
 
-.grow-log__field--wide {
+.grow-log__wide {
   grid-column: 1 / -1;
 }
 
@@ -417,8 +417,8 @@ function setRequestErrors(requestErrorValue, fallbackMessage) {
 .grow-log__field textarea,
 .grow-log__field select {
   padding: 9px;
-  border: 1px solid var(--color-2);
-  background: #fff;
+  border: 1px solid var(--color-border);
+  background: var(--color-contrast);
 }
 
 .grow-log__field textarea {
@@ -433,7 +433,7 @@ function setRequestErrors(requestErrorValue, fallbackMessage) {
 .grow-log__field-error,
 .grow-log__error,
 .grow-log__photo-errors {
-  color: #8b1a1a;
+  color: var(--color-error);
 }
 
 .grow-log__entry-list {
@@ -444,7 +444,7 @@ function setRequestErrors(requestErrorValue, fallbackMessage) {
 
 .grow-log__entry {
   padding: 18px;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 
 .grow-log__entry-actions {
@@ -474,15 +474,15 @@ function setRequestErrors(requestErrorValue, fallbackMessage) {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
-  background: #b8b8b8;
+  background: var(--color-placeholder);
 }
 
 .grow-log__state {
   padding: 18px;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 
 .grow-log__state--error {
-  color: #8b1a1a;
+  color: var(--color-error);
 }
 </style>

@@ -142,7 +142,7 @@ function createGrowLogPayload() {
 
 .grow-log-edit__message {
   padding: 12px;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 
 .grow-log-edit__delete {
@@ -151,6 +151,6 @@ function createGrowLogPayload() {
 }
 
 .grow-log-edit__error {
-  color: #8b1a1a;
+  color: var(--color-error);
 }
 </style>

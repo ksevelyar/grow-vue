@@ -64,12 +64,12 @@ function submitForm() {
 .grow-log-form__field textarea,
 .grow-log-form__field select {
   padding: 9px;
-  border: 1px solid var(--color-2);
-  background: #fff;
+  border: 1px solid var(--color-border);
+  background: var(--color-contrast);
 }
 
 .grow-log-form__error {
-  color: #8b1a1a;
+  color: var(--color-error);
   font-size: 0.85rem;
 }
 

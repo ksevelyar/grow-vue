@@ -119,14 +119,14 @@ function getLogStatus(growLog) {
 
 .plant-detail__field input {
   padding: 9px;
-  border: 1px solid var(--color-2);
+  border: 1px solid var(--color-border);
 }
 
 .plant-detail__field-error,
 .plant-detail__error,
 .plant-detail__conflict,
 .plant-detail__state--error {
-  color: #8b1a1a;
+  color: var(--color-error);
 }
 
 .plant-detail__logs {
@@ -140,7 +140,7 @@ function getLogStatus(growLog) {
 
 .plant-detail__log-list li {
   margin: 8px 0;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 
 .plant-detail__log-list a {
@@ -150,16 +150,16 @@ function getLogStatus(growLog) {
 }
 
 .plant-detail__log-name {
-  color: var(--color-4);
+  color: var(--color-text-muted);
 }
 
 .plant-detail__log-status,
 .plant-detail__log-date {
-  color: var(--color-1);
+  color: var(--color-text);
 }
 
 .plant-detail__state {
   padding: 12px;
-  background: var(--color-7);
+  background: var(--color-surface);
 }
 </style>

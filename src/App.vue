@@ -10,13 +10,16 @@ import UserHeader from '@/components/UserHeader.vue'
 
 <style>
 :root {
-  --color-1: #000;
-  --color-2: #999;
-  --color-3: #afb1b3;
-  --color-4: #575757;
-  --color-5: #687f6f;
-  --color-6: #d7d7d7;
-  --color-7: #dfdfdf;
+  --color-text: #000;
+  --color-text-muted: #575757;
+  --color-border: #999;
+  --color-page: #687f6f;
+  --color-surface: #dfdfdf;
+  --color-contrast: #fff;
+  --color-error: #8b1a1a;
+  --color-placeholder: #b8b8b8;
+  --color-overlay: rgb(0 0 0 / 70%);
+  --color-backdrop: rgb(0 0 0 / 95%);
 }
 
 @font-face {
@@ -25,7 +28,7 @@ import UserHeader from '@/components/UserHeader.vue'
 }
 
 body {
-  background: var(--color-5);
+  background: var(--color-page);
   margin: 0;
   font-size: 16px;
   display: flex;
@@ -51,11 +54,11 @@ select {
 }
 
 a {
-  color: var(--color-1);
+  color: var(--color-text);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--color-4);
+  color: var(--color-text-muted);
 }
 </style>
