@@ -113,7 +113,7 @@ describe('grow-log photo gallery', () => {
     const reportForm = wrapper.find('.grow-log__report-form')
     expect(reportForm.find('input[type="date"]').element.value).toBe('2024-01-10')
     expect(reportForm.find('select').element.value).toBe('vegetation')
-    expect(reportForm.find('button[type="submit"]').text()).toBe('Create')
+    expect(reportForm.find('.grow-log__form-actions button').text()).toBe('Create')
 
     const photoInput = reportForm.find('input[type="file"]')
     Object.defineProperty(photoInput.element, 'files', {
@@ -142,7 +142,7 @@ describe('grow-log photo gallery', () => {
     expect(wrapper.find('.gallery__thumbnail img').attributes('src')).toBe(
       `${backendBaseUrl}/photos/200/thumbnail`,
     )
-    expect(wrapper.find('.grow-log__report-form button[type="submit"]').text()).toBe('Update')
+    expect(wrapper.find('.grow-log__form-actions button').text()).toBe('Update')
   })
 
   test('A user removes a photo from an entry', async () => {

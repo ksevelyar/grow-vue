@@ -1,10 +1,10 @@
 <template lang="pug">
-div.grow-log
-  p.grow-log__state(v-if="isLoading") Loading grow log…
-  p.grow-log__state.grow-log__state--error(v-else-if="requestError && !growLog") {{ requestError }}
+.grow-log
+  .grow-log__state(v-if="isLoading") Loading grow log…
+  .grow-log__state.grow-log__state--error(v-else-if="requestError && !growLog") {{ requestError }}
   template(v-else-if="growLog")
     .grow-log__heading
-      h1.grow-log__title {{ growLog.name }}
+      .grow-log__title {{ growLog.name }}
       router-link.grow-log__edit(:to="{ name: 'GrowLogEdit', params: { log_id: growLog.id } }") Edit log
     .grow-log__summary
       .grow-log__summary-field
@@ -27,8 +27,8 @@ div.grow-log
         span.grow-log__summary-label {{ period.stage }}
         span {{ period.duration }} {{ formatDayUnit(period.duration) }}
     Gallery(ref="photoGallery" :photos="allPhotos")
-    div.grow-log__report
-      h2.grow-log__section-title {{ reportTitle }}
+    .grow-log__report
+      .grow-log__section-title {{ reportTitle }}
       form.grow-log__report-form(@submit.prevent="saveReport")
         label.grow-log__field
           span Date
@@ -47,30 +47,29 @@ div.grow-log
           span Photos
           input(ref="photoFileInput" type="file" accept="image/*" multiple @change="selectPhotos")
         .grow-log__photos.grow-log__wide(v-if="selectedReportEntry && selectedReportEntry.photos.length")
-          figure.grow-log__photo(v-for="photo in selectedReportEntry.photos" :key="photo.id")
+          .grow-log__photo(v-for="photo in selectedReportEntry.photos" :key="photo.id")
             img(:src="getBackendUrl(photo.thumbnail_url)")
             button(type="button" @click="deletePhoto(photo)") Remove photo
-        p.grow-log__photo-errors.grow-log__wide(v-if="photoUploadErrors.length")
+        .grow-log__photo-errors.grow-log__wide(v-if="photoUploadErrors.length")
           span(v-for="uploadError in photoUploadErrors" :key="uploadError") {{ uploadError }}
-        p.grow-log__error.grow-log__wide(v-if="requestError") {{ requestError }}
+        .grow-log__error.grow-log__wide(v-if="requestError") {{ requestError }}
         .grow-log__form-actions.grow-log__wide
-          button(type="submit" :disabled="isSavingEntry") {{ reportActionLabel }}
-    div.grow-log__entries
-      h2.grow-log__section-title Log entries
-      p.grow-log__state(v-if="growLog.entries.length === 0") No entries yet.
+          button(:disabled="isSavingEntry") {{ reportActionLabel }}
+    .grow-log__entries
+      .grow-log__section-title Log entries
+      .grow-log__state(v-if="growLog.entries.length === 0") No entries yet.
       .grow-log__entry-list(v-else)
-        article.grow-log__entry(v-for="entry in growLog.entries" :key="entry.id")
+        .grow-log__entry(v-for="entry in growLog.entries" :key="entry.id")
           .grow-log__entry-heading
-            h3.grow-log__entry-title {{ formatEntryTitle(entry) }}
+            .grow-log__entry-title {{ formatEntryTitle(entry) }}
             .grow-log__entry-actions
-              button.grow-log__entry-edit(type="button" @click="editEntry(entry)") Edit
-              button.grow-log__entry-delete(type="button" @click="deleteEntry(entry)") Delete
-          p.grow-log__entry-description(v-if="entry.description") {{ entry.description }}
+              button.grow-log__entry-edit(@click="editEntry(entry)") Edit
+              button.grow-log__entry-delete(@click="deleteEntry(entry)") Delete
+          .grow-log__entry-description(v-if="entry.description") {{ entry.description }}
           .grow-log__photos(v-if="entry.photos.length")
             button.grow-log__photo.grow-log__entry-photo(
               v-for="photo in entry.photos"
               :key="photo.id"
-              type="button"
               @click="openGalleryPhoto(photo.id)"
             )
               img(:src="getBackendUrl(photo.thumbnail_url)")

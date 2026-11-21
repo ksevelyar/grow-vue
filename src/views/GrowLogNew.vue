@@ -1,12 +1,12 @@
 <template lang="pug">
-main.grow-log-new
-  h1.grow-log-new__title New grow log
-  p.grow-log-new__message(v-if="requestError") {{ requestError }}
-  p.grow-log-new__message(v-if="plantsError") {{ plantsError }}
-  p.grow-log-new__message(v-if="plants.length === 0 && !isLoadingPlants")
+.grow-log-new
+  .grow-log-new__title New grow log
+  .grow-log-new__message(v-if="requestError") {{ requestError }}
+  .grow-log-new__message(v-if="plantsError") {{ plantsError }}
+  .grow-log-new__message(v-if="plants.length === 0 && !isLoadingPlants")
     | Create a plant before starting a grow log.
     router-link(:to="{ name: 'Plants' }")  Manage plants
-  p.grow-log-new__message(v-if="isLoadingPlants") Loading plants…
+  .grow-log-new__message(v-if="isLoadingPlants") Loading plants…
   GrowLogForm(
     v-model:form="form"
     :plants="plants"

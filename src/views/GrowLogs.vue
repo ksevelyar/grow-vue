@@ -1,12 +1,11 @@
 <template lang="pug">
-div.grow-logs
+.grow-logs
   .grow-logs__heading
-    h1.grow-logs__title Logs
+    .grow-logs__title Logs
     router-link.button(:to="{ name: 'GrowLogNew' }") New log
-  p.grow-logs__state(v-if="isLoading") Loading logs…
-  p.grow-logs__state.grow-logs__state--error(v-else-if="requestError") {{ requestError }}
+  .grow-logs__state.grow-logs__state--error(v-if="requestError") {{ requestError }}
   .grow-logs__empty(v-else-if="growLogs.length === 0")
-    p No grow logs yet.
+    div No grow logs yet.
     router-link(:to="{ name: 'GrowLogNew' }") Create your first log
   .grow-logs__grid(v-else)
     router-link.grow-logs__card(
@@ -35,7 +34,6 @@ import logsClient from '@/api/logs-client'
 
 const userStore = useUserStore()
 const growLogs = ref([])
-const isLoading = ref(true)
 const requestError = ref('')
 
 onMounted(loadGrowLogs)
@@ -45,8 +43,6 @@ async function loadGrowLogs() {
     growLogs.value = await logsClient.list()
   } catch (loadError) {
     requestError.value = loadError.message || 'Unable to load grow logs'
-  } finally {
-    isLoading.value = false
   }
 }
 

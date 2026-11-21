@@ -2,9 +2,9 @@ const backendBaseUrl = import.meta.env.VITE_BACK || 'http://grow.localhost:3000'
 
 export async function requestJson(path, options = {}) {
   const requestHeaders = new Headers(options.headers)
-  const requestBodyIsFormData = options.body instanceof FormData
+  const isRequestBodyFormData = options.body instanceof FormData
 
-  if (options.body !== undefined && !requestBodyIsFormData) {
+  if (options.body !== undefined && !isRequestBodyFormData) {
     requestHeaders.set('Content-Type', 'application/json')
   }
 

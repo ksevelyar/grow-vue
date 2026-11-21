@@ -180,7 +180,7 @@ describe('grow-log details and reports', () => {
     expect(reportForm.find('input[type="date"]').element.value).toBe('2024-01-10')
     expect(reportForm.find('select').element.value).toBe('bloom')
     expect(reportForm.find('textarea').element.value).toBe('Today report')
-    expect(reportForm.find('button[type="submit"]').text()).toBe('Update')
+    expect(reportForm.find('.grow-log__form-actions button').text()).toBe('Update')
     expect(wrapper.findAll('.grow-log__entry-actions')[0].text()).toContain('Edit')
     expect(wrapper.findAll('.grow-log__entry-actions')[0].text()).toContain('Delete')
 
@@ -248,7 +248,7 @@ describe('grow-log details and reports', () => {
     const reportForm = wrapper.find('.grow-log__report-form')
     expect(reportForm.find('input[type="date"]').element.value).toBe('2024-01-10')
     expect(reportForm.find('select').element.value).toBe('vegetation')
-    expect(reportForm.find('button[type="submit"]').text()).toBe('Create')
+    expect(reportForm.find('.grow-log__form-actions button').text()).toBe('Create')
 
     await reportForm.find('textarea').setValue('New report')
     await reportForm.trigger('submit')
@@ -266,7 +266,7 @@ describe('grow-log details and reports', () => {
     const restoredReportForm = wrapper.find('.grow-log__report-form')
     expect(restoredReportForm.find('input[type="date"]').element.value).toBe('2024-01-10')
     expect(restoredReportForm.find('textarea').element.value).toBe('New report')
-    expect(restoredReportForm.find('button[type="submit"]').text()).toBe('Update')
+    expect(restoredReportForm.find('.grow-log__form-actions button').text()).toBe('Update')
     expect(wrapper.findAll('.grow-log__entry')).toHaveLength(2)
   })
 

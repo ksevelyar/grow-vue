@@ -25,7 +25,7 @@ form.grow-log-form(@submit.prevent="submitForm")
     span Outcome
     textarea(v-model="form.outcome" name="outcome" rows="3")
   .grow-log-form__actions
-    button(type="submit" :disabled="isSaving || plants.length === 0") {{ submitLabel }}
+    button(:disabled="isSaving || plants.length === 0") {{ submitLabel }}
     router-link(:to="cancelDestination") Cancel
 </template>
 

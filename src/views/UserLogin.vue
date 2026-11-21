@@ -14,7 +14,7 @@ form.user-login(@submit.prevent='loginUser')
     required
   )
 
-  button.user-login__submit(type="submit") Authenticate
+  button.user-login__submit Authenticate
 </template>
 
 <script setup>

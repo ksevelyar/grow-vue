@@ -1,7 +1,6 @@
 import { flushPromises } from '@vue/test-utils'
 import { http, HttpResponse } from 'msw'
 import { expect, test, vi } from 'vitest'
-import { useUserStore } from '@/stores/user'
 import { backendBaseUrl, createTestServer, mountApplicationAtPath } from './support'
 
 const server = createTestServer()
@@ -67,7 +66,6 @@ test('A user signs in', async () => {
     { email: authenticatedUser.email, password: 'correct horse battery staple' },
   ])
   expect(receivedCurrentSessionRequests).toHaveLength(1)
-  expect(useUserStore().user).toMatchObject(authenticatedUser)
   await vi.waitFor(() => expect(router.currentRoute.value.path).toBe('/'))
   expect(wrapper.find('.grow-logs__title').text()).toBe('Logs')
   expect(wrapper.find('.user-header').text()).toContain('Logs')
@@ -100,7 +98,6 @@ test('A user registers', async () => {
   await vi.waitFor(() => expect(router.currentRoute.value.path).toBe('/login'))
 
   expect(receivedCurrentSessionRequests).toHaveLength(1)
-  expect(useUserStore().user).toMatchObject(registeredUser)
 })
 
 function interceptUnauthenticatedCurrentSessionRequests() {

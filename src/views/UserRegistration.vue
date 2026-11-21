@@ -26,7 +26,7 @@ form.user-registration(@submit.prevent='registerUser')
     required
   )
 
-  button.user-registration__submit(type="submit") Register
+  button.user-registration__submit Register
 </template>
 
 <script setup>

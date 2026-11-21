@@ -1,12 +1,11 @@
 <template lang="pug">
-section.gallery
-  h2.gallery__title Photos
-  p.gallery__empty(v-if="photos.length === 0") No photos yet.
+.gallery
+  .gallery__title Photos
+  .gallery__empty(v-if="photos.length === 0") No photos yet.
   .gallery__grid(v-else)
     button.gallery__thumbnail(
       v-for="(photo, photoIndex) in photos"
       :key="photo.id"
-      type="button"
       @click="openPhoto(photoIndex)"
     )
       img(:src="getBackendUrl(photo.thumbnail_url)")
@@ -14,21 +13,19 @@ section.gallery
     v-if="activePhotoIndex !== null"
     @click.self="closeViewer"
   )
-    button.gallery__close(type="button" @click="closeViewer")
+    button.gallery__close(@click="closeViewer")
       | ×
     button.gallery__navigation.gallery__navigation--previous(
-      type="button"
       @click="navigateToPreviousPhoto"
     )
       | ‹
-    p.gallery__error(v-if="viewerError") {{ viewerError }}
+    .gallery__error(v-if="viewerError") {{ viewerError }}
     .gallery__image(v-if="activePhotoUrl")
       img.gallery__full-image(
         :src="activePhotoUrl"
       )
       span.gallery__caption(v-if="photos[activePhotoIndex].caption") {{ photos[activePhotoIndex].caption }}
     button.gallery__navigation.gallery__navigation--next(
-      type="button"
       @click="navigateToNextPhoto"
     )
       | ›

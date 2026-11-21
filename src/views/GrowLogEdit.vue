@@ -1,11 +1,11 @@
 <template lang="pug">
-main.grow-log-edit
-  p.grow-log-edit__message(v-if="isLoading") Loading grow log…
-  p.grow-log-edit__message(v-else-if="loadError") {{ loadError }}
+.grow-log-edit
+  .grow-log-edit__message(v-if="isLoading") Loading grow log…
+  .grow-log-edit__message(v-else-if="loadError") {{ loadError }}
   template(v-else)
-    h1.grow-log-edit__title Edit grow log
-    p.grow-log-edit__message(v-if="plantsError") {{ plantsError }}
-    p.grow-log-edit__error(v-if="requestError") {{ requestError }}
+    .grow-log-edit__title Edit grow log
+    .grow-log-edit__message(v-if="plantsError") {{ plantsError }}
+    .grow-log-edit__error(v-if="requestError") {{ requestError }}
     GrowLogForm(
       v-model:form="form"
       :plants="plants"
@@ -15,8 +15,8 @@ main.grow-log-edit
       :cancel-destination="{ name: 'GrowLogDetail', params: { log_id: route.params.log_id } }"
       @submit="updateGrowLog"
     )
-    button.grow-log-edit__delete(type="button" :disabled="isDeleting" @click="deleteGrowLog") Delete
-    p.grow-log-edit__error(v-if="deleteError") {{ deleteError }}
+    button.grow-log-edit__delete(:disabled="isDeleting" @click="deleteGrowLog") Delete
+    .grow-log-edit__error(v-if="deleteError") {{ deleteError }}
 </template>
 
 <script setup>

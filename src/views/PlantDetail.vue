@@ -1,23 +1,23 @@
 <template lang="pug">
-main.plant-detail
-  p.plant-detail__state(v-if="isLoading") Loading plant…
-  p.plant-detail__state.plant-detail__state--error(v-else-if="requestError") {{ requestError }}
+.plant-detail
+  .plant-detail__state(v-if="isLoading") Loading plant…
+  .plant-detail__state.plant-detail__state--error(v-else-if="requestError") {{ requestError }}
   template(v-else-if="plant")
-    h1.plant-detail__title {{ plant.name }}
+    .plant-detail__title {{ plant.name }}
     form.plant-detail__form(@submit.prevent="renamePlant")
       label.plant-detail__field
         span Plant name
         input(v-model="plantName" required)
         span.plant-detail__field-error(v-if="fieldErrors.name") {{ fieldErrors.name }}
-      button(type="submit" :disabled="isSaving") Save name
-    p.plant-detail__error(v-if="formError") {{ formError }}
-    button.plant-detail__delete(type="button" :disabled="isSaving" @click="deletePlant") Delete
-    p.plant-detail__conflict(v-if="deleteError") {{ deleteError }}
-    section.plant-detail__logs
-      h2 Grow logs
-      p.plant-detail__state(v-if="plant.grow_logs.length === 0") This plant has no grow logs.
-      ul.plant-detail__log-list(v-else)
-        li(v-for="growLog in plant.grow_logs" :key="growLog.id")
+      button(:disabled="isSaving") Save name
+    .plant-detail__error(v-if="formError") {{ formError }}
+    button.plant-detail__delete(:disabled="isSaving" @click="deletePlant") Delete
+    .plant-detail__conflict(v-if="deleteError") {{ deleteError }}
+    .plant-detail__logs
+      div Grow logs
+      .plant-detail__state(v-if="plant.grow_logs.length === 0") This plant has no grow logs.
+      .plant-detail__log-list(v-else)
+        div(v-for="growLog in plant.grow_logs" :key="growLog.id")
           router-link(:to="{ name: 'GrowLogDetail', params: { log_id: growLog.id } }")
             span.plant-detail__log-name {{ growLog.name }}
             span.plant-detail__log-date {{ formatDate(growLog.started_at) }}
@@ -138,7 +138,7 @@ function getLogStatus(growLog) {
   padding: 0;
 }
 
-.plant-detail__log-list li {
+.plant-detail__log-list > div {
   margin: 8px 0;
   background: var(--color-surface);
 }

@@ -1,15 +1,15 @@
 <template lang="pug">
-main.plant-list
-  h1.plant-list__title Plants
-  p.plant-list__state(v-if="isLoading") Loading plants…
-  p.plant-list__state.plant-list__state--error(v-else-if="requestError") {{ requestError }}
+.plant-list
+  .plant-list__title Plants
+  .plant-list__state(v-if="isLoading") Loading plants…
+  .plant-list__state.plant-list__state--error(v-else-if="requestError") {{ requestError }}
   form.plant-list__form(@submit.prevent="savePlant")
     label.plant-list__field
       span(v-if="editingPlantId === null") New plant name
       span(v-else) Plant name
       input(v-model="plantName" required)
       span.plant-list__field-error(v-if="fieldErrors.name") {{ fieldErrors.name }}
-    button(type="submit" :disabled="isSaving")
+    button(:disabled="isSaving")
       span(v-if="editingPlantId === null") Create
       span(v-else) Save
     button.plant-list__cancel(
@@ -18,14 +18,14 @@ main.plant-list
       :disabled="isSaving"
       @click="clearPlantForm"
     ) Cancel
-  p.plant-list__message(v-if="formMessage") {{ formMessage }}
-  p.plant-list__state(v-if="plants.length === 0 && !isLoading") No plants yet.
+  .plant-list__message(v-if="formMessage") {{ formMessage }}
+  .plant-list__state(v-if="plants.length === 0 && !isLoading") No plants yet.
   .plant-list__items(v-else)
-    article.plant-list__item(v-for="plant in plants" :key="plant.id")
+    .plant-list__item(v-for="plant in plants" :key="plant.id")
       router-link.plant-list__link(:to="{ name: 'PlantDetail', params: { plant_id: plant.id } }") {{ plant.name }}
-      button.plant-list__edit(type="button" :disabled="isSaving" @click="editPlant(plant)") Edit
-      button.plant-list__delete(type="button" :disabled="isSaving" @click="deletePlant(plant)") Delete
-      p.plant-list__conflict(v-if="deleteErrors[plant.id]") {{ deleteErrors[plant.id] }}
+      button.plant-list__edit(:disabled="isSaving" @click="editPlant(plant)") Edit
+      button.plant-list__delete(:disabled="isSaving" @click="deletePlant(plant)") Delete
+      .plant-list__conflict(v-if="deleteErrors[plant.id]") {{ deleteErrors[plant.id] }}
 </template>
 
 <script setup>
@@ -72,18 +72,18 @@ function clearPlantForm() {
 }
 
 async function savePlant() {
-  const wasEditingPlant = editingPlantId.value !== null
+  const isEditingPlant = editingPlantId.value !== null
   isSaving.value = true
   fieldErrors.value = {}
   formMessage.value = ''
   try {
-    if (wasEditingPlant) {
+    if (isEditingPlant) {
       await plantsClient.update(editingPlantId.value, { name: plantName.value })
     } else {
       await plantsClient.create({ name: plantName.value })
     }
     clearPlantForm()
-    if (wasEditingPlant) {
+    if (isEditingPlant) {
       formMessage.value = 'Plant updated.'
     } else {
       formMessage.value = 'Plant created.'
@@ -91,7 +91,7 @@ async function savePlant() {
     await loadPlants()
   } catch (saveError) {
     fieldErrors.value = getRequestFieldErrors(saveError)
-    if (wasEditingPlant) {
+    if (isEditingPlant) {
       formMessage.value = saveError.message || 'Unable to update plant'
     } else {
       formMessage.value = saveError.message || 'Unable to create plant'
