@@ -49,7 +49,7 @@ async function loadPlants() {
   try {
     plants.value = await plantsClient.list()
   } catch (loadError) {
-    plantsError.value = loadError.message || 'Unable to load plants'
+    plantsError.value = loadError.message
   } finally {
     isLoadingPlants.value = false
   }
@@ -86,7 +86,7 @@ function createGrowLogPayload() {
 }
 
 function setRequestErrors(requestErrorValue) {
-  requestError.value = requestErrorValue.message || 'Unable to save grow log'
+  requestError.value = requestErrorValue.message
   fieldErrors.value = getRequestFieldErrors(requestErrorValue)
 }
 </script>

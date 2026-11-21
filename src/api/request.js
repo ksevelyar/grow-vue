@@ -1,30 +1,24 @@
 const backendBaseUrl = import.meta.env.VITE_BACK || 'http://grow.localhost:3000'
 
-export async function requestJson(path, options = {}) {
+export function requestJson(path, options = {}) {
   const requestHeaders = new Headers(options.headers)
-  const isRequestBodyFormData = options.body instanceof FormData
+  requestHeaders.set('Content-Type', 'application/json')
+  return request(path, { ...options, headers: requestHeaders })
+}
 
-  if (options.body !== undefined && !isRequestBodyFormData) {
-    requestHeaders.set('Content-Type', 'application/json')
-  }
+export function requestMultipart(path, options) {
+  return request(path, options)
+}
 
+async function request(path, options) {
   const response = await fetch(`${backendBaseUrl}${path}`, {
     ...options,
     credentials: 'include',
-    headers: requestHeaders,
   })
 
   if (!response.ok) {
-    let responseBody = {}
-    try {
-      responseBody = await response.json()
-    } catch {
-      responseBody = {}
-    }
-
-    const requestError = new Error(
-      responseBody.error || `Request failed with status ${response.status}`,
-    )
+    const responseBody = await response.json()
+    const requestError = new Error(responseBody.error)
     requestError.status = response.status
     requestError.fields = responseBody.fields || []
     requestError.responseBody = responseBody

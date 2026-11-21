@@ -42,12 +42,12 @@ async function loadGrowLogs() {
   try {
     growLogs.value = await logsClient.list()
   } catch (loadError) {
-    requestError.value = loadError.message || 'Unable to load grow logs'
+    requestError.value = loadError.message
   }
 }
 
 function getCurrentProgress(startedAt) {
-  const userTimezone = userStore.user.timezone || 'UTC'
+  const userTimezone = userStore.user.timezone
   const currentDate = getCurrentDate(userTimezone)
   const growLogProgress = calculateGrowLogProgress(startedAt, currentDate, userTimezone)
 

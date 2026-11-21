@@ -50,7 +50,7 @@ async function loadPlant() {
     plant.value = await plantsClient.get(route.params.plant_id)
     plantName.value = plant.value.name
   } catch (loadError) {
-    requestError.value = loadError.message || 'Unable to load plant'
+    requestError.value = loadError.message
   } finally {
     isLoading.value = false
   }
@@ -65,7 +65,7 @@ async function renamePlant() {
     await loadPlant()
   } catch (renameError) {
     fieldErrors.value = getRequestFieldErrors(renameError)
-    formError.value = renameError.message || 'Unable to rename plant'
+    formError.value = renameError.message
   } finally {
     isSaving.value = false
   }
@@ -81,7 +81,7 @@ async function deletePlant() {
       deleteError.value = 'This plant cannot be deleted while it has grow logs.'
       return
     }
-    deleteError.value = deleteRequestError.message || 'Unable to delete plant'
+    deleteError.value = deleteRequestError.message
   }
 }
 

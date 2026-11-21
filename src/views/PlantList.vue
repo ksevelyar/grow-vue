@@ -51,7 +51,7 @@ async function loadPlants() {
   try {
     plants.value = await plantsClient.list()
   } catch (loadError) {
-    requestError.value = loadError.message || 'Unable to load plants'
+    requestError.value = loadError.message
   } finally {
     isLoading.value = false
   }
@@ -91,11 +91,7 @@ async function savePlant() {
     await loadPlants()
   } catch (saveError) {
     fieldErrors.value = getRequestFieldErrors(saveError)
-    if (isEditingPlant) {
-      formMessage.value = saveError.message || 'Unable to update plant'
-    } else {
-      formMessage.value = saveError.message || 'Unable to create plant'
-    }
+    formMessage.value = saveError.message
   } finally {
     isSaving.value = false
   }
@@ -107,7 +103,7 @@ async function deletePlant(plant) {
     await plantsClient.delete(plant.id)
     await loadPlants()
   } catch (deleteError) {
-    let deleteErrorMessage = deleteError.message || 'Unable to delete plant'
+    let deleteErrorMessage = deleteError.message
     if (deleteError.status === 409) {
       deleteErrorMessage = 'This plant cannot be deleted while it has grow logs.'
     }

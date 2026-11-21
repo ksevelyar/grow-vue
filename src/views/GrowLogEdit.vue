@@ -73,9 +73,9 @@ async function loadGrowLog() {
     })
   } catch (growLogLoadError) {
     if (growLogLoadError.status) {
-      loadError.value = growLogLoadError.message || 'Unable to load grow log'
+      loadError.value = growLogLoadError.message
     } else {
-      plantsError.value = growLogLoadError.message || 'Unable to load plants'
+      plantsError.value = growLogLoadError.message
     }
   } finally {
     isLoading.value = false
@@ -92,7 +92,7 @@ async function deleteGrowLog() {
     await logsClient.delete(route.params.log_id)
     await router.push({ name: 'GrowLogs' })
   } catch (deletionError) {
-    deleteError.value = deletionError.message || 'Unable to delete grow log'
+    deleteError.value = deletionError.message
   } finally {
     isDeleting.value = false
   }
@@ -106,7 +106,7 @@ async function updateGrowLog() {
     await logsClient.update(route.params.log_id, createGrowLogPayload())
     await router.push({ name: 'GrowLogDetail', params: { log_id: route.params.log_id } })
   } catch (saveError) {
-    requestError.value = saveError.message || 'Unable to save grow log'
+    requestError.value = saveError.message
     fieldErrors.value = getRequestFieldErrors(saveError)
   } finally {
     isSaving.value = false

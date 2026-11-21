@@ -97,7 +97,7 @@ const userStore = useUserStore()
 const stages = ['germination', 'seedling', 'vegetation', 'bloom']
 const growLog = ref(null)
 const growLogProgress = computed(() => {
-  const userTimezone = userStore.user.timezone || 'UTC'
+  const userTimezone = userStore.user.timezone
   let progressDate = getCurrentDate(userTimezone)
   if (growLog.value.ended_at) {
     progressDate = convertTimestampToDate(growLog.value.ended_at)
@@ -116,7 +116,7 @@ const stagePeriods = computed(() => {
   const stageStarts = entries.filter(
     (entry, entryIndex) => entryIndex === 0 || entry.stage !== entries[entryIndex - 1].stage,
   )
-  const userTimezone = userStore.user.timezone || 'UTC'
+  const userTimezone = userStore.user.timezone
   let lastDate = getCurrentDate(userTimezone)
   if (growLog.value.ended_at) {
     lastDate = convertTimestampToDate(growLog.value.ended_at)
@@ -174,7 +174,7 @@ async function loadGrowLog(preferredEntryId = null) {
     growLog.value = loadedGrowLog
     selectReportEntry(loadedGrowLog, preferredEntryId)
   } catch (loadError) {
-    setRequestErrors(loadError, 'Unable to load grow log')
+    setRequestErrors(loadError)
   } finally {
     isLoading.value = false
   }
@@ -187,7 +187,7 @@ function selectReportEntry(loadedGrowLog, preferredEntryId) {
     return
   }
 
-  const userTimezone = userStore.user.timezone || 'UTC'
+  const userTimezone = userStore.user.timezone
   const currentDate = getCurrentDate(userTimezone)
   const todayEntry = loadedGrowLog.entries.find(
     (entry) => convertTimestampToDate(entry.occurred_at) === currentDate,
@@ -249,7 +249,7 @@ async function saveReport() {
     clearSelectedPhotoFiles()
     await loadGrowLog()
   } catch (saveError) {
-    setRequestErrors(saveError, 'Unable to save entry')
+    setRequestErrors(saveError)
   } finally {
     isSavingEntry.value = false
   }
@@ -277,24 +277,22 @@ async function deleteEntry(entry) {
     }
     await loadGrowLog(preferredEntryId)
   } catch (deleteError) {
-    setRequestErrors(deleteError, 'Unable to delete entry')
+    setRequestErrors(deleteError)
   }
 }
 
 async function deletePhoto(photo) {
+  const reportEntry = selectedReportEntry.value
   try {
     await photosClient.delete(photo.id)
-    const reportEntry = selectedReportEntry.value
-    if (reportEntry) {
-      reportEntry.photos = reportEntry.photos.filter((entryPhoto) => entryPhoto.id !== photo.id)
-    }
+    reportEntry.photos = reportEntry.photos.filter((entryPhoto) => entryPhoto.id !== photo.id)
   } catch (deleteError) {
-    setRequestErrors(deleteError, 'Unable to remove photo')
+    setRequestErrors(deleteError)
   }
 }
 
 function selectPhotos(event) {
-  selectedPhotoFiles.value = Array.from(event.target.files || [])
+  selectedPhotoFiles.value = Array.from(event.target.files)
 }
 
 function clearSelectedPhotoFiles() {
@@ -315,7 +313,7 @@ function findPreviousEntry(entries, currentDate) {
 }
 
 function formatEntryTitle(entry) {
-  const userTimezone = userStore.user.timezone || 'UTC'
+  const userTimezone = userStore.user.timezone
   const growLogProgress = calculateGrowLogProgress(
     growLog.value.started_at,
     entry.occurred_at,
@@ -336,8 +334,8 @@ function formatDayUnit(duration) {
   return 'days'
 }
 
-function setRequestErrors(requestErrorValue, fallbackMessage) {
-  requestError.value = requestErrorValue.message || fallbackMessage
+function setRequestErrors(requestErrorValue) {
+  requestError.value = requestErrorValue.message
   fieldErrors.value = getRequestFieldErrors(requestErrorValue)
 }
 </script>

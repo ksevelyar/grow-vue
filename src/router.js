@@ -81,7 +81,7 @@ async function guardProtectedRoutes(destinationRoute) {
     await userStore.get()
     return true
   } catch (sessionError) {
-    if (sessionError?.status === 401) {
+    if (sessionError.status === 401) {
       return { name: 'UserLogin' }
     }
 

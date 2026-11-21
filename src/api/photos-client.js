@@ -1,10 +1,10 @@
-import { getBackendUrl, requestJson } from '@/api/request'
+import { getBackendUrl, requestJson, requestMultipart } from '@/api/request'
 
 export default {
   async upload(entryId, file) {
     const formData = new FormData()
     formData.append('file', file)
-    return requestJson(`/entries/${entryId}/photos`, {
+    return requestMultipart(`/entries/${entryId}/photos`, {
       method: 'POST',
       body: formData,
     })
