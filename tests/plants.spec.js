@@ -1,6 +1,6 @@
 import { flushPromises } from '@vue/test-utils'
 import { http, HttpResponse } from 'msw'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import {
   backendBaseUrl,
   createAuthenticatedSessionHandler,
@@ -11,7 +11,7 @@ import {
 const server = createTestServer()
 
 describe('plants', () => {
-  it('shows the plant list', async () => {
+  test('A user views plants', async () => {
     server.use(
       createAuthenticatedSessionHandler(),
       http.get(`${backendBaseUrl}/plants`, () =>
@@ -29,7 +29,7 @@ describe('plants', () => {
     expect(plantLinks.map((plantLink) => plantLink.text())).toEqual(['Rosemary', 'Basil'])
   })
 
-  it('creates a plant and shows it in the list', async () => {
+  test('A user creates a plant', async () => {
     const plantRecords = []
     const receivedCreateNames = []
     server.use(
@@ -53,7 +53,7 @@ describe('plants', () => {
     await vi.waitFor(() => expect(wrapper.find('.plant-list__link').text()).toBe('Rosemary'))
   })
 
-  it('renames a plant and shows its updated name', async () => {
+  test('A user renames a plant', async () => {
     const plantRecords = [{ id: 71, name: 'Rosemary' }]
     const receivedUpdateNames = []
     server.use(
@@ -81,7 +81,7 @@ describe('plants', () => {
     )
   })
 
-  it('deletes a plant without grow logs', async () => {
+  test('A user deletes a plant without grow logs', async () => {
     const plantRecords = [{ id: 71, name: 'Rosemary' }]
     const receivedPlantDeletes = []
     server.use(
@@ -104,7 +104,7 @@ describe('plants', () => {
     await vi.waitFor(() => expect(wrapper.text()).toContain('No plants yet.'))
   })
 
-  it('explains why a plant with grow logs cannot be deleted', async () => {
+  test('A user cannot delete a plant with grow logs', async () => {
     const plantRecords = [{ id: 71, name: 'Rosemary' }]
     server.use(
       createAuthenticatedSessionHandler(),
@@ -122,7 +122,7 @@ describe('plants', () => {
     )
   })
 
-  it('shows a plant’s grow logs with links to their details', async () => {
+  test('A user views a plant’s grow logs', async () => {
     server.use(
       createAuthenticatedSessionHandler(),
       http.get(`${backendBaseUrl}/plants/71`, () =>
@@ -136,6 +136,12 @@ describe('plants', () => {
               started_at: '2024-01-01T00:00:00Z',
               ended_at: null,
             },
+            {
+              id: 93,
+              name: 'Previous garden',
+              started_at: '2023-01-01T00:00:00Z',
+              ended_at: '2023-02-01T00:00:00Z',
+            },
           ],
         }),
       ),
@@ -147,6 +153,9 @@ describe('plants', () => {
     expect(wrapper.text()).toContain('Rosemary')
     expect(wrapper.text()).toContain('Kitchen garden')
     expect(wrapper.find('.plant-detail__delete').text()).toBe('Delete')
-    expect(wrapper.find('.plant-detail__log-list a').attributes('href')).toBe('/logs/92')
+    const growLogLinks = wrapper.findAll('.plant-detail__log-list a')
+    expect(growLogLinks[0].text()).toContain('Active')
+    expect(growLogLinks[1].text()).toContain('Completed')
+    expect(growLogLinks[0].attributes('href')).toBe('/logs/92')
   })
 })

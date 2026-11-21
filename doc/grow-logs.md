@@ -1,36 +1,37 @@
 # Grow logs
 ## Requirements
-* After signing in, the user sees grow-log cards.
-* Grow logs are sorted by the date of their latest entry.
-* A grow log with entry photos uses its most recent available photo as its cover, even when the latest entry has no photo.
-* A grow log without entry photos uses a grey cover.
-* Each card shows the grow-log start date in dd-mm-yy format.
-* Clicking a grow log opens its detail page.
-* The user can create a grow log with a name, plant, and start date.
-* After creation, the user sees the new log’s detail page.
-* The user can update a grow log’s name, plant, start date, description, end date, and outcome.
-* After saving, the user sees the updated grow-log details.
-* The user can delete a grow log from its edit page.
+* Users can create, update, and delete grow logs.
+* A grow log has a name, plant, start date, description, end date, and outcome.
+* Creating a grow log requires a name, plant, and start date.
+* Grow logs are ordered by their latest entry date.
+* A grow log uses its most recent entry photo as its cover.
 * Deleting a grow log also deletes its entries and photos.
-* After deletion, the user returns to the grow-log list and no longer sees the deleted log.
 
 ## User scenarios
-### 1. User can see the grow-log list
-1. The user has two grow logs, one with entry photos and one without.
-2. The user opens the main page.
-3. The user sees the logs sorted by latest entry date, with the most recent available photo or a grey cover for each log.
+### 1. A user views grow logs
+1. Sign in with two grow logs. Give one log an entry with a photo followed by an entry without a photo.
+2. Open the main page.
+3. Verify the logs are ordered by latest entry date.
+4. Verify the photo appears as the log’s cover.
 
-### 2. User can create a grow log
-1. The user opens the main page and selects New log.
-2. The user enters a name, selects a plant, and enters a start date.
-3. The user creates the log and sees its detail page.
+### 2. A user creates a grow log
+1. Open the main page and select New log.
+2. Enter a name, select a plant, and enter a start date.
+3. Create the log.
+4. Verify the new log opens.
 
-### 3. User can update a grow log
-1. The user opens a grow log and selects Edit.
-2. The user changes its name, plant, start date, description, end date, or outcome.
-3. The user saves the changes and sees the updated grow-log details.
+### 3. A user sees a validation error when creating a grow log
+1. Open the new grow-log form and enter a whitespace-only name, plant, and start date.
+2. Create the log and return `must not be empty` for the name.
+3. Verify the error appears.
 
-### 4. User can delete a grow log
-1. The user opens a grow log and selects Edit.
-2. The user deletes the log and confirms the deletion.
-3. The user returns to the grow-log list and no longer sees the deleted log.
+### 4. A user updates a grow log
+1. Open a grow log and select Edit.
+2. Change its name, plant, start date, description, end date, or outcome.
+3. Save the changes.
+4. Verify the updated details appear.
+
+### 5. A user deletes a grow log
+1. Open a grow log and select Edit.
+2. Delete the log and confirm.
+3. Verify the grow-log list opens without the deleted log.

@@ -1,24 +1,24 @@
 import { flushPromises } from '@vue/test-utils'
 import { http, HttpResponse } from 'msw'
-import { expect, it, vi } from 'vitest'
+import { expect, test, vi } from 'vitest'
 import { useUserStore } from '@/stores/user'
 import { backendBaseUrl, createTestServer, mountApplicationAtPath } from './support'
 
 const server = createTestServer()
 
-it.each(['/logs/new', '/logs/42', '/logs/42/edit', '/plants', '/plants/42'])(
-  'redirects_unauthenticated_protected_route_to_login_from_%s',
-  async (routePath) => {
+test('An unauthenticated user is redirected to sign in', async () => {
+  for (const routePath of ['/logs/new', '/logs/42', '/logs/42/edit', '/plants', '/plants/42']) {
     const receivedCurrentSessionRequests = interceptUnauthenticatedCurrentSessionRequests()
     const { wrapper, router } = await mountApplicationAtPath(routePath)
 
     expect(router.currentRoute.value.path).toBe('/login')
     expect(wrapper.find('.user-login').exists()).toBe(true)
     expect(receivedCurrentSessionRequests).toHaveLength(1)
-  },
-)
+    wrapper.unmount()
+  }
+})
 
-it('keeps_login_accessible_without_an_authenticated_session', async () => {
+test('A user accesses sign-in without a session', async () => {
   const receivedCurrentSessionRequests = interceptUnauthenticatedCurrentSessionRequests()
   const { wrapper, router } = await mountApplicationAtPath('/login')
 
@@ -27,7 +27,7 @@ it('keeps_login_accessible_without_an_authenticated_session', async () => {
   expect(receivedCurrentSessionRequests).toHaveLength(0)
 })
 
-it('keeps_registration_accessible_without_an_authenticated_session', async () => {
+test('A user accesses registration without a session', async () => {
   const receivedCurrentSessionRequests = interceptUnauthenticatedCurrentSessionRequests()
   const { wrapper, router } = await mountApplicationAtPath('/register')
 
@@ -36,7 +36,7 @@ it('keeps_registration_accessible_without_an_authenticated_session', async () =>
   expect(receivedCurrentSessionRequests).toHaveLength(0)
 })
 
-it('logs_in_without_parsing_the_empty_session_creation_response', async () => {
+test('A user signs in', async () => {
   const receivedLoginRequests = []
   const receivedCurrentSessionRequests = []
   const authenticatedUser = {
@@ -74,7 +74,7 @@ it('logs_in_without_parsing_the_empty_session_creation_response', async () => {
   expect(wrapper.find('.user-header').text()).toContain('Plants')
 })
 
-it('stores_the_direct_json_response_from_registration', async () => {
+test('A user registers', async () => {
   const receivedCurrentSessionRequests = []
   const registeredUser = {
     id: 84,

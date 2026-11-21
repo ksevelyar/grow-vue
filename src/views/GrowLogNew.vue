@@ -1,12 +1,12 @@
 <template lang="pug">
-main.grow-log-form-page
-  h1.grow-log-form-page__title New grow log
-  p.grow-log-form-page__message(v-if="requestError") {{ requestError }}
-  p.grow-log-form-page__message(v-if="plantsError") {{ plantsError }}
-  p.grow-log-form-page__message(v-if="plants.length === 0 && !isLoadingPlants")
+main.grow-log-new
+  h1.grow-log-new__title New grow log
+  p.grow-log-new__message(v-if="requestError") {{ requestError }}
+  p.grow-log-new__message(v-if="plantsError") {{ plantsError }}
+  p.grow-log-new__message(v-if="plants.length === 0 && !isLoadingPlants")
     | Create a plant before starting a grow log.
     router-link(:to="{ name: 'Plants' }")  Manage plants
-  p.grow-log-form-page__message(v-if="isLoadingPlants") Loading plants…
+  p.grow-log-new__message(v-if="isLoadingPlants") Loading plants…
   GrowLogForm(
     v-model:form="form"
     :plants="plants"
@@ -92,17 +92,17 @@ function setRequestErrors(requestErrorValue) {
 </script>
 
 <style>
-.grow-log-form-page {
+.grow-log-new {
   width: min(700px, calc(100vw - 40px));
   margin: 0 auto;
   padding: 24px 0 48px;
 }
 
-.grow-log-form-page__title {
+.grow-log-new__title {
   font-weight: normal;
 }
 
-.grow-log-form-page__message {
+.grow-log-new__message {
   padding: 12px;
   background: var(--color-7);
 }

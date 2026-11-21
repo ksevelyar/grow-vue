@@ -7,34 +7,28 @@ section.gallery
       v-for="(photo, photoIndex) in photos"
       :key="photo.id"
       type="button"
-      :aria-label="`View photo ${photoIndex + 1} of ${photos.length}`"
       @click="openPhoto(photoIndex)"
     )
-      img(:src="getBackendUrl(photo.thumbnail_url)" alt="")
+      img(:src="getBackendUrl(photo.thumbnail_url)")
   .gallery__viewer(
     v-if="activePhotoIndex !== null"
-    role="dialog"
-    aria-modal="true"
-    :aria-label="`Photo ${activePhotoIndex + 1} of ${photos.length}`"
     @click.self="closeViewer"
   )
-    button.gallery__close(type="button" aria-label="Close photo viewer" autofocus @click="closeViewer")
+    button.gallery__close(type="button" @click="closeViewer")
       | ×
     button.gallery__navigation.gallery__navigation--previous(
       type="button"
-      aria-label="Previous photo"
       @click="navigateToPreviousPhoto"
     )
       | ‹
     p.gallery__error(v-if="viewerError") {{ viewerError }}
-    img.gallery__full-image(
-      v-if="activePhotoUrl"
-      :src="activePhotoUrl"
-      :alt="getCurrentPhotoAlt()"
-    )
+    .gallery__image(v-if="activePhotoUrl")
+      img.gallery__full-image(
+        :src="activePhotoUrl"
+      )
+      span.gallery__caption(v-if="photos[activePhotoIndex].caption") {{ photos[activePhotoIndex].caption }}
     button.gallery__navigation.gallery__navigation--next(
       type="button"
-      aria-label="Next photo"
       @click="navigateToNextPhoto"
     )
       | ›
@@ -120,10 +114,6 @@ function handleViewerKeydown(keyboardEvent) {
   }
 }
 
-function getCurrentPhotoAlt() {
-  return `Photo ${activePhotoIndex.value + 1}`
-}
-
 function closeViewer() {
   photoRequestIdentifier.value += 1
   revokeActivePhotoUrl()
@@ -181,14 +171,32 @@ function revokeActivePhotoUrl() {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px 72px;
+  padding: 0 40px;
   background: rgb(0 0 0 / 95%);
 }
 
-.gallery__full-image {
+.gallery__image {
+  position: relative;
   max-width: 100%;
   max-height: 100%;
+}
+
+.gallery__full-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100vh;
   object-fit: contain;
+}
+
+.gallery__caption {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 8px 12px;
+  color: #fff;
+  background: rgb(0 0 0 / 70%);
+  text-align: center;
 }
 
 .gallery__close,
@@ -224,10 +232,6 @@ function revokeActivePhotoUrl() {
 }
 
 @media (max-width: 600px) {
-  .gallery__viewer {
-    padding: 60px 56px;
-  }
-
   .gallery__navigation--previous {
     left: 4px;
   }

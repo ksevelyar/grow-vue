@@ -18,7 +18,6 @@ div.grow-logs
         img(
           v-if="growLog.thumbnail_url"
           :src="getBackendUrl(growLog.thumbnail_url)"
-          :alt="`Latest photo for ${growLog.name}`"
         )
         span.grow-logs__progress(v-if="!growLog.ended_at")
           | {{ getCurrentProgress(growLog.started_at) }}

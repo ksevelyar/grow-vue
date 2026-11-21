@@ -1,6 +1,6 @@
 import { flushPromises } from '@vue/test-utils'
 import { http, HttpResponse } from 'msw'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import {
   backendBaseUrl,
   createAuthenticatedSessionHandler,
@@ -11,7 +11,7 @@ import {
 const server = createTestServer()
 
 describe('grow logs', () => {
-  it('shows active day and week, completed logs, latest photos, and gray fallbacks', async () => {
+  test('A user views grow logs', async () => {
     vi.setSystemTime(new Date('2024-01-08T12:00:00.000Z'))
     server.use(
       createAuthenticatedSessionHandler({ timezone: 'Europe/London' }),
@@ -71,7 +71,7 @@ describe('grow logs', () => {
     expect(galleryCards[0].attributes('href')).toBe('/logs/10')
   })
 
-  it('creates a grow log and opens its detail page', async () => {
+  test('A user creates a grow log', async () => {
     const receivedLogPayloads = []
     const createdLog = {
       ...createLogDetail([]),
@@ -101,7 +101,7 @@ describe('grow logs', () => {
     await vi.waitFor(() => expect(wrapper.text()).toContain('Summer flower'))
   })
 
-  it('reports validation errors when creating a grow log', async () => {
+  test('A user sees a validation error when creating a grow log', async () => {
     const receivedLogPayloads = []
     server.use(
       createAuthenticatedSessionHandler(),
@@ -111,7 +111,7 @@ describe('grow logs', () => {
         return HttpResponse.json(
           {
             error: 'validation failed',
-            fields: [{ field: 'name', message: 'name is already used' }],
+            fields: [{ field: 'name', message: 'must not be empty' }],
           },
           { status: 422 },
         )
@@ -119,7 +119,7 @@ describe('grow logs', () => {
     )
 
     const { wrapper } = await mountApplicationAtPath('/logs/new')
-    await wrapper.find('input[name="name"]').setValue('Summer flower')
+    await wrapper.find('input[name="name"]').setValue('   ')
     await wrapper.find('select[name="plant_id"]').setValue('7')
     await wrapper.find('input[name="started_at"]').setValue('2024-04-01')
     await wrapper.find('.grow-log-form').trigger('submit')
@@ -128,14 +128,14 @@ describe('grow logs', () => {
     expect(receivedLogPayloads).toHaveLength(1)
     expect(receivedLogPayloads[0]).toMatchObject({
       plant_id: 7,
-      name: 'Summer flower',
+      name: '   ',
       started_at: '2024-04-01T00:00:00.000Z',
       ended_at: null,
     })
-    expect(wrapper.text()).toContain('name is already used')
+    expect(wrapper.text()).toContain('must not be empty')
   })
 
-  it('updates a grow log and opens its detail page', async () => {
+  test('A user updates a grow log', async () => {
     const receivedLogPayloads = []
     const growLog = createLogDetail([])
     server.use(
@@ -143,8 +143,10 @@ describe('grow logs', () => {
       http.get(`${backendBaseUrl}/logs/42`, () => HttpResponse.json(growLog)),
       http.get(`${backendBaseUrl}/plants`, () => HttpResponse.json([{ id: 7, name: 'Tomato' }])),
       http.patch(`${backendBaseUrl}/logs/42`, async ({ request }) => {
-        receivedLogPayloads.push(await request.json())
-        return HttpResponse.json({ ...growLog, name: 'Updated summer grow' })
+        const updatedPayload = await request.json()
+        receivedLogPayloads.push(updatedPayload)
+        Object.assign(growLog, updatedPayload)
+        return HttpResponse.json(growLog)
       }),
     )
 
@@ -157,9 +159,12 @@ describe('grow logs', () => {
     expect(receivedLogPayloads).toHaveLength(1)
     expect(receivedLogPayloads[0]).toMatchObject({ name: 'Updated summer grow', plant_id: 7 })
     await vi.waitFor(() => expect(router.currentRoute.value.path).toBe('/logs/42'))
+    await vi.waitFor(() =>
+      expect(wrapper.find('.grow-log__title').text()).toBe('Updated summer grow'),
+    )
   })
 
-  it('deletes a grow log from its edit page and returns to the log list', async () => {
+  test('A user deletes a grow log', async () => {
     const receivedDeletes = []
     const confirmDialog = vi.spyOn(window, 'confirm').mockReturnValue(true)
     server.use(
@@ -175,8 +180,8 @@ describe('grow logs', () => {
 
     const { wrapper, router } = await mountApplicationAtPath('/logs/42/edit')
     await flushPromises()
-    expect(wrapper.find('.grow-log-form-page__delete').text()).toBe('Delete')
-    await wrapper.find('.grow-log-form-page__delete').trigger('click')
+    expect(wrapper.find('.grow-log-edit__delete').text()).toBe('Delete')
+    await wrapper.find('.grow-log-edit__delete').trigger('click')
     await flushPromises()
 
     expect(confirmDialog).toHaveBeenCalledOnce()

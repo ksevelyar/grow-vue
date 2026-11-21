@@ -1,11 +1,11 @@
 <template lang="pug">
-main.grow-log-form-page
-  p.grow-log-form-page__message(v-if="isLoading") Loading grow log…
-  p.grow-log-form-page__message(v-else-if="loadError") {{ loadError }}
+main.grow-log-edit
+  p.grow-log-edit__message(v-if="isLoading") Loading grow log…
+  p.grow-log-edit__message(v-else-if="loadError") {{ loadError }}
   template(v-else)
-    h1.grow-log-form-page__title Edit grow log
-    p.grow-log-form-page__message(v-if="plantsError") {{ plantsError }}
-    p.grow-log-form-page__error(v-if="requestError") {{ requestError }}
+    h1.grow-log-edit__title Edit grow log
+    p.grow-log-edit__message(v-if="plantsError") {{ plantsError }}
+    p.grow-log-edit__error(v-if="requestError") {{ requestError }}
     GrowLogForm(
       v-model:form="form"
       :plants="plants"
@@ -15,8 +15,8 @@ main.grow-log-form-page
       :cancel-destination="{ name: 'GrowLogDetail', params: { log_id: route.params.log_id } }"
       @submit="updateGrowLog"
     )
-    button.grow-log-form-page__delete(type="button" :disabled="isDeleting" @click="deleteGrowLog") Delete
-    p.grow-log-form-page__error(v-if="deleteError") {{ deleteError }}
+    button.grow-log-edit__delete(type="button" :disabled="isDeleting" @click="deleteGrowLog") Delete
+    p.grow-log-edit__error(v-if="deleteError") {{ deleteError }}
 </template>
 
 <script setup>
@@ -130,27 +130,27 @@ function createGrowLogPayload() {
 </script>
 
 <style>
-.grow-log-form-page {
+.grow-log-edit {
   width: min(700px, calc(100vw - 40px));
   margin: 0 auto;
   padding: 24px 0 48px;
 }
 
-.grow-log-form-page__title {
+.grow-log-edit__title {
   font-weight: normal;
 }
 
-.grow-log-form-page__message {
+.grow-log-edit__message {
   padding: 12px;
   background: var(--color-7);
 }
 
-.grow-log-form-page__delete {
+.grow-log-edit__delete {
   margin-top: 18px;
   padding: 10px 14px;
 }
 
-.grow-log-form-page__error {
+.grow-log-edit__error {
   color: #8b1a1a;
 }
 </style>

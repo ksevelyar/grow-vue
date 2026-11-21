@@ -1,37 +1,33 @@
 # Plants
 ## Requirements
-* The user can view a list of plants.
-* The user can create a plant with a name.
-* The user can rename a plant.
-* The user can delete a plant when it has no grow logs.
-* The user cannot delete a plant that has grow logs.
-* The user sees an explanation when deletion is prevented.
-* A plant page shows its grow logs with their start dates and active or completed statuses.
-* Clicking a grow log opens its detail page.
+* Users can view, create, rename, and delete plants.
+* Creating a plant requires a name.
+* A plant with grow logs cannot be deleted.
+* Users can view a plant’s grow logs.
 
 ## User scenarios
-### 1. User can see the plant list
-1. The user opens the plants page.
-2. The user sees their plants.
+### 1. A user views plants
+1. Open the plants page.
+2. Verify the plants appear.
 
-### 2. User can create a plant
-1. The user opens the plants page.
-2. The user enters a plant name.
-3. The user creates the plant and sees it in the list.
+### 2. A user creates a plant
+1. Open the plants page and enter a plant name.
+2. Create the plant.
+3. Verify it appears in the list.
 
-### 3. User can rename a plant
-1. The user changes a plant’s name.
-2. The user saves the name and sees the updated name.
+### 3. A user renames a plant
+1. Change a plant’s name and save.
+2. Verify the updated name appears.
 
-### 4. User can delete a plant without grow logs
-1. The user deletes a plant that has no grow logs.
-2. The user no longer sees the plant in the list.
+### 4. A user deletes a plant without grow logs
+1. Delete a plant without grow logs.
+2. Verify it no longer appears in the list.
 
-### 5. User cannot delete a plant with grow logs
-1. The user tries to delete a plant that has grow logs.
-2. The user sees an explanation that the plant cannot be deleted.
+### 5. A user cannot delete a plant with grow logs
+1. Try to delete a plant with grow logs.
+2. Verify an explanation appears and the plant remains.
 
-### 6. User can view a plant’s grow logs
-1. The user opens a plant.
-2. The user sees its grow logs with their start dates and statuses.
-3. The user selects a grow log and sees its detail page.
+### 6. A user views a plant’s grow logs
+1. Open a plant.
+2. Verify its grow logs appear with their start dates and statuses.
+3. Select a grow log and verify its details open.

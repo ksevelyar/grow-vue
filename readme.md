@@ -9,10 +9,15 @@ npm ci
 npm run dev
 ```
 
+## Tests
+```
+nix develop
+npm run tests
+```
+
 ## Documentation
-* [Contract](doc/contract.md)
-* [Grow log](doc/grow-log.md)
-* [Grow log gallery and photos](doc/grow-log-gallery.md)
-* [Grow logs](doc/grow-logs.md)
 * [Plants](doc/plants.md)
+* [Grow logs](doc/grow-logs.md)
+* [Grow log details](doc/grow-log.md)
+* [Grow log gallery and photos](doc/grow-log-gallery.md)
 * [Users](doc/users.md)

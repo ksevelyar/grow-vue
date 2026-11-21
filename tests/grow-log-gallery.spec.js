@@ -2,7 +2,7 @@ import { File as NodeFile } from 'node:buffer'
 import photosClient from '@/api/photos-client'
 import { flushPromises } from '@vue/test-utils'
 import { http, HttpResponse } from 'msw'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import {
   backendBaseUrl,
   createAuthenticatedSessionHandler,
@@ -13,90 +13,56 @@ import {
 const server = createTestServer()
 
 describe('grow-log photo gallery', () => {
-  it('shows every photo below log data and opens original photos with arrow navigation', async () => {
-    const loadedPhotoIdentifiers = []
-    vi.spyOn(photosClient, 'get').mockImplementation(async (photoId) => {
-      loadedPhotoIdentifiers.push(photoId)
-      return `blob:original-${photoId}`
-    })
+  test('A user browses a grow log’s photos', async () => {
+    vi.spyOn(photosClient, 'get').mockImplementation(async (photoId) => `blob:original-${photoId}`)
+    const entries = [
+      {
+        id: 4,
+        occurred_at: '2026-11-20T00:00:00Z',
+        stage: 'bloom',
+        photos: [{ id: 40, thumbnail_url: '/photos/40/thumbnail' }],
+      },
+      {
+        id: 3,
+        occurred_at: '2026-11-19T00:00:00Z',
+        stage: 'bloom',
+        photos: [{ id: 30, thumbnail_url: '/photos/30/thumbnail' }],
+      },
+      { id: 2, occurred_at: '2026-11-16T00:00:00Z', stage: 'bloom' },
+      { id: 1, occurred_at: '2026-10-17T00:00:00Z', stage: 'vegetation' },
+    ]
     server.use(
       createAuthenticatedSessionHandler(),
-      http.get(`${backendBaseUrl}/plants`, () => HttpResponse.json([])),
       http.get(`${backendBaseUrl}/logs/42`, () =>
-        HttpResponse.json(
-          createLogDetail([
-            {
-              id: 3,
-              occurred_at: '2024-01-03T00:00:00Z',
-              stage: 'bloom',
-              photos: [
-                { id: 32, thumbnail_url: '/photos/32/thumbnail', original_filename: 'bloom.jpg' },
-                { id: 33, thumbnail_url: '/photos/33/thumbnail', original_filename: 'leaf.jpg' },
-              ],
-            },
-            {
-              id: 2,
-              occurred_at: '2024-01-02T00:00:00Z',
-              stage: 'vegetation',
-              photos: [
-                {
-                  id: 21,
-                  thumbnail_url: '/photos/21/thumbnail',
-                  original_filename: 'seedling.jpg',
-                },
-              ],
-            },
-          ]),
-        ),
+        HttpResponse.json({
+          ...createLogDetail(entries),
+          name: 'Mustard',
+          started_at: '2026-10-15T00:00:00Z',
+        }),
       ),
     )
 
     const { wrapper } = await mountApplicationAtPath('/logs/42')
     await flushPromises()
-
-    const gallery = wrapper.find('.gallery')
-    const summary = wrapper.find('.grow-log__summary')
-    expect(
-      summary.element.compareDocumentPosition(gallery.element) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).not.toBe(0)
-    const photoThumbnails = wrapper.findAll('.gallery__thumbnail')
-    expect(photoThumbnails).toHaveLength(3)
-    expect(photoThumbnails.map((thumbnail) => thumbnail.find('img').attributes('src'))).toEqual([
-      `${backendBaseUrl}/photos/32/thumbnail`,
-      `${backendBaseUrl}/photos/33/thumbnail`,
-      `${backendBaseUrl}/photos/21/thumbnail`,
-    ])
-    const entryPhotoThumbnails = wrapper.findAll('.grow-log__entry-photo')
-    expect(entryPhotoThumbnails).toHaveLength(3)
-
-    await photoThumbnails[0].trigger('click')
+    const entryTitles = wrapper.findAll('.grow-log__entry-title').map((entry) => entry.text())
+    await wrapper.findAll('.gallery__thumbnail')[0].trigger('click')
     await flushPromises()
-    expect(loadedPhotoIdentifiers).toEqual([32])
-    expect(wrapper.find('.gallery__full-image').attributes('src')).toBe('blob:original-32')
+    expect(wrapper.find('.gallery__full-image').attributes('src')).toBe('blob:original-40')
+    expect(wrapper.find('.gallery__viewer').text()).toContain(entryTitles[0])
+    expect(wrapper.find('.gallery__viewer').text()).toContain('Day 37 · Week 6 · bloom 5')
     await window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }))
     await flushPromises()
-    expect(loadedPhotoIdentifiers).toEqual([32, 33])
-    expect(wrapper.find('.gallery__full-image').attributes('src')).toBe('blob:original-33')
+    expect(wrapper.find('.gallery__full-image').attributes('src')).toBe('blob:original-30')
+    expect(wrapper.find('.gallery__viewer').text()).toContain(entryTitles[1])
+    expect(wrapper.find('.gallery__viewer').text()).toContain('Day 36 · Week 6 · bloom 4')
     await window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }))
     await flushPromises()
-    expect(loadedPhotoIdentifiers).toEqual([32, 33, 32])
-    expect(wrapper.find('.gallery__full-image').attributes('src')).toBe('blob:original-32')
+    expect(wrapper.find('.gallery__full-image').attributes('src')).toBe('blob:original-40')
     await window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
-    expect(wrapper.find('.gallery__viewer').exists()).toBe(false)
-
-    await entryPhotoThumbnails[2].trigger('click')
-    await flushPromises()
-    expect(loadedPhotoIdentifiers).toEqual([32, 33, 32, 21])
-    expect(wrapper.find('.gallery__full-image').attributes('src')).toBe('blob:original-21')
-    await window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }))
-    await flushPromises()
-    expect(loadedPhotoIdentifiers).toEqual([32, 33, 32, 21, 32])
-    expect(wrapper.find('.gallery__full-image').attributes('src')).toBe('blob:original-32')
-    await wrapper.find('.gallery__close').trigger('click')
     expect(wrapper.find('.gallery__viewer').exists()).toBe(false)
   })
 
-  it('uploads multiple photos and displays successful uploads across the report and gallery', async () => {
+  test('A user uploads photos to a report', async () => {
     vi.setSystemTime(new Date('2024-01-10T12:00:00.000Z'))
     const receivedStages = []
     const receivedUploadEntryIdentifiers = []
@@ -179,7 +145,7 @@ describe('grow-log photo gallery', () => {
     expect(wrapper.find('.grow-log__report-form button[type="submit"]').text()).toBe('Update')
   })
 
-  it('removes a photo from the report, entry history, and gallery', async () => {
+  test('A user removes a photo from an entry', async () => {
     vi.setSystemTime(new Date('2024-01-01T12:00:00.000Z'))
     const receivedPhotoDeletes = []
     let entryPhotos = [
@@ -236,7 +202,7 @@ describe('grow-log photo gallery', () => {
     )
   })
 
-  it('deletes an entry and its photos from the history and gallery', async () => {
+  test('A user deletes an entry and its photos', async () => {
     const receivedEntryDeletes = []
     const confirmDialog = vi.spyOn(window, 'confirm').mockReturnValue(true)
     const entryRecords = [

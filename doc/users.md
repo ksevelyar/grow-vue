@@ -1,24 +1,30 @@
 # Users
 ## Requirements
-* A user can register with an email address, handle, password, and time zone.
-* `/register` is accessible without an authenticated session.
-* A user can sign in with an email address and password.
-* `/login` is accessible without an authenticated session.
-* Every page except `/login` and `/register` requires an authenticated session.
-* An unauthenticated user is redirected to `/login` only when the current-session endpoint responds with 401.
-* Network and other server errors from the current-session endpoint do not trigger a login redirect.
+* Registration requires an email address, handle, password, and time zone.
+* Sign-in requires an email address and password.
+* Registration and sign-in are available without a session.
+* Other pages require a session.
+* Network and server errors do not trigger a sign-in redirect.
 
 ## User scenarios
-### 1. User can register
-1. The user opens the registration page.
-2. The user enters an email address, handle, password, and time zone.
-3. The user registers and is redirected to the login page.
+### 1. A user registers
+1. Open the registration page.
+2. Enter an email address, handle, password, and time zone.
+3. Register and verify the login page opens.
 
-### 2. User can sign in
-1. The user opens the login page.
-2. The user enters an email address and password.
-3. The user signs in and sees the grow-log list.
+### 2. A user signs in
+1. Open the login page.
+2. Enter an email address and password.
+3. Sign in and verify the grow-log list opens.
 
-### 3. Unauthenticated user is redirected to sign in
-1. The user opens a protected page without an authenticated session.
-2. The user is redirected to the login page.
+### 3. A user accesses sign-in without a session
+1. Open the login page without a session.
+2. Verify the login page appears.
+
+### 4. A user accesses registration without a session
+1. Open the registration page without a session.
+2. Verify the registration page appears.
+
+### 5. An unauthenticated user is redirected to sign in
+1. Open a protected page without a session.
+2. Verify the login page opens.

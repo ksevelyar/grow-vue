@@ -8,8 +8,8 @@ div.grow-log
       router-link.grow-log__edit(:to="{ name: 'GrowLogEdit', params: { log_id: growLog.id } }") Edit log
     .grow-log__summary
       .grow-log__summary-field
-        span.grow-log__summary-label Plant
-        span {{ growLog.plant_name }}
+        span.grow-log__summary-label Progress
+        span Day {{ growLogProgress.dayNumber }} · Week {{ growLogProgress.weekNumber }}
       .grow-log__summary-field
         span.grow-log__summary-label Start date
         span {{ formatDate(growLog.started_at) }}
@@ -23,6 +23,9 @@ div.grow-log
       .grow-log__summary-field
         span.grow-log__summary-label Outcome
         span.grow-log__summary-value {{ growLog.outcome || 'No outcome yet.' }}
+      .grow-log__summary-field(v-for="period in stagePeriods" :key="period.stage")
+        span.grow-log__summary-label {{ period.stage }}
+        span {{ period.duration }} {{ formatDayUnit(period.duration) }}
     Gallery(ref="photoGallery" :photos="allPhotos")
     div.grow-log__report
       h2.grow-log__section-title {{ reportTitle }}
@@ -45,7 +48,7 @@ div.grow-log
           input(ref="photoFileInput" type="file" accept="image/*" multiple @change="selectPhotos")
         .grow-log__photos.grow-log__field--wide(v-if="selectedReportEntry && selectedReportEntry.photos.length")
           figure.grow-log__photo(v-for="photo in selectedReportEntry.photos" :key="photo.id")
-            img(:src="getBackendUrl(photo.thumbnail_url)" :alt="photo.original_filename || 'Grow log photo'")
+            img(:src="getBackendUrl(photo.thumbnail_url)")
             button(type="button" @click="deletePhoto(photo)") Remove photo
         p.grow-log__photo-errors.grow-log__field--wide(v-if="photoUploadErrors.length")
           span(v-for="uploadError in photoUploadErrors" :key="uploadError") {{ uploadError }}
@@ -65,13 +68,12 @@ div.grow-log
           p.grow-log__entry-description(v-if="entry.description") {{ entry.description }}
           .grow-log__photos(v-if="entry.photos.length")
             button.grow-log__photo.grow-log__entry-photo(
-              v-for="(photo, photoIndex) in entry.photos"
+              v-for="photo in entry.photos"
               :key="photo.id"
               type="button"
-              :aria-label="`Open photo ${photoIndex + 1} from ${formatDate(entry.occurred_at)}`"
               @click="openGalleryPhoto(photo.id)"
             )
-              img(:src="getBackendUrl(photo.thumbnail_url)" alt="")
+              img(:src="getBackendUrl(photo.thumbnail_url)")
 </template>
 
 <script setup>
@@ -95,7 +97,48 @@ const route = useRoute()
 const userStore = useUserStore()
 const stages = ['germination', 'seedling', 'vegetation', 'bloom']
 const growLog = ref(null)
-const allPhotos = computed(() => growLog.value.entries.flatMap((entry) => entry.photos))
+const growLogProgress = computed(() => {
+  const userTimezone = userStore.user.timezone || 'UTC'
+  let progressDate = getCurrentDate(userTimezone)
+  if (growLog.value.ended_at) {
+    progressDate = convertTimestampToDate(growLog.value.ended_at)
+  }
+  return calculateGrowLogProgress(growLog.value.started_at, progressDate, userTimezone)
+})
+const stagePeriods = computed(() => {
+  if (!growLog.value) {
+    return []
+  }
+
+  const entries = [...growLog.value.entries].sort(
+    (firstEntry, secondEntry) =>
+      new Date(firstEntry.occurred_at).getTime() - new Date(secondEntry.occurred_at).getTime(),
+  )
+  const stageStarts = entries.filter(
+    (entry, entryIndex) => entryIndex === 0 || entry.stage !== entries[entryIndex - 1].stage,
+  )
+  const userTimezone = userStore.user.timezone || 'UTC'
+  let lastDate = getCurrentDate(userTimezone)
+  if (growLog.value.ended_at) {
+    lastDate = convertTimestampToDate(growLog.value.ended_at)
+  }
+
+  return stageStarts.map((entry, entryIndex) => {
+    const startDate = convertTimestampToDate(entry.occurred_at)
+    const nextStage = stageStarts[entryIndex + 1]
+    let duration = calculateGrowLogProgress(startDate, lastDate).dayNumber
+    if (nextStage) {
+      const nextStageDate = convertTimestampToDate(nextStage.occurred_at)
+      duration = calculateGrowLogProgress(startDate, nextStageDate).dayNumber - 1
+    }
+    return { stage: entry.stage, startDate, duration }
+  })
+})
+const allPhotos = computed(() =>
+  growLog.value.entries.flatMap((entry) =>
+    entry.photos.map((photo) => ({ ...photo, caption: formatEntryTitle(entry) })),
+  ),
+)
 const photoGallery = ref(null)
 const isLoading = ref(true)
 const isSavingEntry = ref(false)
@@ -280,7 +323,18 @@ function formatEntryTitle(entry) {
     userTimezone,
   )
 
-  return `${formatDate(entry.occurred_at)} · Day ${growLogProgress.dayNumber} · Week ${growLogProgress.weekNumber} · ${entry.stage}`
+  const stagePeriod = stagePeriods.value.find((period) => period.stage === entry.stage)
+  const entryDate = convertTimestampToDate(entry.occurred_at)
+  const stageDay = calculateGrowLogProgress(stagePeriod.startDate, entryDate).dayNumber
+
+  return `${formatDate(entry.occurred_at)} · Day ${growLogProgress.dayNumber} · Week ${growLogProgress.weekNumber} · ${entry.stage} ${stageDay}`
+}
+
+function formatDayUnit(duration) {
+  if (duration === 1) {
+    return 'day'
+  }
+  return 'days'
 }
 
 function setRequestErrors(requestErrorValue, fallbackMessage) {
